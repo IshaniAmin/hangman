@@ -8,64 +8,40 @@
 // have limited number of guesses
 // when correctly guessing word, add to # of wins
 
-
-var options = ["batman", "superman", "robin", "aquaman", "flash", "arrow", "spiderman", "hulk", "thor", "wolverine", "daredevil"];
+var options = ["batman"]
+// var options = ["batman", "superman", "robin", "wonderwoman", "flash", "arrow"]
 var wins = 0;
 var guesses = [];
+var guessesLeft = 10;
 
 document.onkeyup = function(event){
         var key = event.key;
+        
 
         var display = document.querySelector("#main");
         var randomWord = options[Math.floor(Math.random()*options.length)];
         console.log(randomWord);
+        // for me to check if word is being logged
 
-        function decideSuperhero (spaces) {
-			var string = '<p>Guess a letter!<p/>'
-			string += '<p>Current Word: <p/>';
-        	string += '<p>' + spaces + '<p/>';
-        	string += '<p>Guesses left: <p/>';
-        	string += '<p>Letters guessed: <p/>';
-        	display.innerHTML = string;
-		}
-       
-        if (key == " ") {
 
-        	if (randomWord == "batman") {
-        		decideSuperhero ("_ _ _ _ _ _");
-        	}
-        	else if (randomWord == "superman") {
-        		decideSuperhero ("_ _ _ _ _ _ _ _");
-        	}
-        	else if (randomWord == "robin") {
-        		decideSuperhero ("_ _ _ _ _");
-        	}
-        	else if (randomWord == "aquaman") {
-        		decideSuperhero ("_ _ _ _ _ _ _");
-        	}
-        	else if (randomWord == "flash") {
-        		decideSuperhero ("_ _ _ _ _");
-        	}
-        	else if (randomWord == "arrow") {
-        		decideSuperhero ("_ _ _ _ _");
-        	}
-        	else if (randomWord == "spiderman") {
-        		decideSuperhero ("_ _ _ _ _ _ _ _ _");
-        	}
-        	else if (randomWord == "hulk") {
-        		decideSuperhero ("_ _ _ _");
-        	}
-        	else if (randomWord == "thor") {
-        		decideSuperhero ("_ _ _ _");
-        	}
-        	else if (randomWord == "wolverine") {
-        		decideSuperhero ("_ _ _ _ _ _ _ _ _");
-        	}
-        	else if (randomWord == "daredevil") {
-        		decideSuperhero ("_ _ _ _ _ _ _ _ _");
-        	}
+
+        function decideSuperhero () {
+		var string = '<p>Guess a letter!</p>'
+		string += '<p>Current Word: ';
+                for (var k=0; k < randomWord.length ; k++ ) {
+                        string +=  '_' ;
+                }
+                string += '</p>'
+        	string += '<p>Guesses left: ' + guessesLeft + '</p>';
+        	string += '<p>Letters guessed: </p>';
+        	display.innerHTML = string; 
         }
+
+        decideSuperhero()
+
 }
+
+
 
 
 
