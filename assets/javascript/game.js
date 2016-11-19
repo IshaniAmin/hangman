@@ -4,7 +4,7 @@ var wins = 0;
 var guesses = [];
 var guessesLeft = 0;
 var splitWord = [];
-var midWord = []
+var spaces = []
 var foundWord = []
 
 var display = document.querySelector("#main");
@@ -19,14 +19,14 @@ function decideSuperhero() {
                     guesses = [];
             }
             splitWord = randomWord.split("");
-            console.log(splitWord)
             for (var i=0;i<splitWord.length;i++) {
-                midWord[i] = '_';
+                spaces[i] = '_';
                 foundWord[i] = false;
             }
 
             console.log(randomWord);
-            console.log(midWord)
+            console.log(splitWord)
+            console.log(spaces)
 }
 
     
@@ -49,7 +49,7 @@ document.onkeyup = function(event){
                 if (foundWord[i] == false) {
 
                 foundWord[i] = true;
-                midWord[i] = key;
+                spaces[i] = key;
                 wins++;         
                 match = true;
             }
@@ -72,7 +72,7 @@ document.onkeyup = function(event){
             var text = document.querySelector("#secret-word");
             text = '<p> Wins: ' + wins + '</p>';
             text +='<p> Current Word: <br>';
-            text += midWord;
+            text += spaces;
             text += '</p>';
             text +='<p> Number of guesses left: ' + guessesLeft + '</p>';
             text += '<p>Your guesses so far: ' + guesses + '</p>';
