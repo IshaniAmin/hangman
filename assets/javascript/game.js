@@ -1,7 +1,7 @@
 
 var hangmanGame = {
 
-  /
+
   wordsToPick: {
     "batman" : {
       picture: "batman-logo.jpg"
@@ -39,27 +39,25 @@ var hangmanGame = {
 
     
     this.lettersOfTheWord = this.wordInPlay.split("");
-
-    this.rebuildWordView();
     
+    this.rebuildWordView();
+
     this.processUpdateTotalGuesses();
   },
 
- 
+
   updatePage: function(letter) {
-   
+    
     if (this.guessesLeft === 0) {
       this.restartGame();
     }
-   
+
     else {
       
       this.updateGuesses(letter);
 
-      
       this.updateMatchedLetters(letter);
 
-      
       this.rebuildWordView();
 
       if (this.updateWins() === true) {
@@ -71,7 +69,7 @@ var hangmanGame = {
 
 
   updateGuesses: function(letter) {
-
+    
     if ((this.guessedLetters.indexOf(letter) === -1) && (this.lettersOfTheWord.indexOf(letter) === -1)) {
 
       this.guessedLetters.push(letter);
@@ -84,14 +82,15 @@ var hangmanGame = {
   },
 
   processUpdateTotalGuesses: function() {
-
+    
     this.totalGuesses = this.lettersOfTheWord.length + 5;
     this.guessesLeft = this.totalGuesses;
 
+    
     document.querySelector("#guessLeft").innerHTML = this.guessesLeft;
   },
 
-
+  
   updateMatchedLetters: function(letter) {
     
     for (var i = 0; i < this.lettersOfTheWord.length; i++) {
@@ -103,7 +102,7 @@ var hangmanGame = {
     }
   },
 
-  
+
   rebuildWordView: function() {
     
     var wordView = "";
@@ -141,17 +140,14 @@ var hangmanGame = {
   
   updateWins: function() {
 
-    
-
 
     if (this.matchedLetters.length === 0) {
       var win = false;
     }
-
+    
     else {
       var win = true;
     }
-
 
     for (var i = 0; i < this.lettersOfTheWord.length; i++) {
       if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) === -1) {
@@ -159,14 +155,16 @@ var hangmanGame = {
       }
     }
 
-
+    
     if (win === true) {
+
 
       this.wins = this.wins + 1;
 
+
       document.querySelector("#wins").innerHTML = "Wins: " + this.wins;
 
-      // Update the image of the band on the page.
+
       // document.querySelector("#picture").innerHTML = "<img id='heroPicture' class='heroImage' src='assets/images/" + this.wordsToPick[this.wordInPlay].picture + "' alt='" + this.wordsToPick[this.wordInPlay].song + "'>";
 
       return true;
