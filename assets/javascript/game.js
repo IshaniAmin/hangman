@@ -1,88 +1,190 @@
 
-var options = ["batman", "superman", "robin", "wonderwoman", "flash", "arrow"]
-var wins = 0;
-var guesses = [];
-var guessesLeft = 0;
-var splitWord = [];
-var spaces = []
-var foundWord = []
+var hangmanGame = {
 
-var display = document.querySelector("#main");
-var randomWord;
+  /
+  wordsToPick: {
+    "batman" : {
+      picture: "batman-logo.jpg"
+    },
+    "superman" : {
+      picture: "superman.jpg"
+    },
+    "robin" : {
+      picture: "robin.jpg"
+    },
+    "wonderwoman" : {
+      picture: "wonderwoman.jpg"
+    },
+    "flash" : {
+      picture: "flash.jpg"
+    },
+    "arrow" : {
+      picture: "arrow.jpg"
+    }
+  },
 
-function decideSuperhero() {
+  wordInPlay: null,
+  lettersOfTheWord: [],
+  matchedLetters: [],
+  guessedLetters: [],
+  guessesLeft: 0,
+  totalGuesses: 0,
+  letterGuessed: null,
+  wins: 0,
 
-    randomWord = options[Math.floor(Math.random()*options.length)];
-
-            if (guessesLeft == 0) {
-                    guessesLeft = 10;
-                    guesses = [];
-            }
-            splitWord = randomWord.split("");
-            for (var i=0;i<splitWord.length;i++) {
-                spaces[i] = '_';
-                foundWord[i] = false;
-            }
-
-            console.log(randomWord);
-            console.log(splitWord)
-            console.log(spaces)
-}
+  setupGame: function() {
+    
+    var objKeys = Object.keys(this.wordsToPick);
+    this.wordInPlay = objKeys[Math.floor(Math.random() * objKeys.length)];
 
     
+    this.lettersOfTheWord = this.wordInPlay.split("");
 
-
-document.onkeyup = function(event){
+    this.rebuildWordView();
     
-    var key = event.key;  
-    console.log("key chosen", key);
+    this.processUpdateTotalGuesses();
+  },
 
-    var match = false;
-    //spacebar is keycode 32
-    if(event.which == 32){
-        decideSuperhero();
-    } 
+ 
+  updatePage: function(letter) {
+   
+    if (this.guessesLeft === 0) {
+      this.restartGame();
+    }
+   
     else {
-        for (i=0;i<splitWord.length;i++) {
-            
-            if (splitWord[i] == key) {
-                if (foundWord[i] == false) {
+      
+      this.updateGuesses(letter);
 
-                foundWord[i] = true;
-                spaces[i] = key;
-                wins++;         
-                match = true;
-            }
-            }
+      
+      this.updateMatchedLetters(letter);
+
+      
+      this.rebuildWordView();
+
+      if (this.updateWins() === true) {
+        this.restartGame();
+      }
+    }
+
+  },
+
+
+  updateGuesses: function(letter) {
+
+    if ((this.guessedLetters.indexOf(letter) === -1) && (this.lettersOfTheWord.indexOf(letter) === -1)) {
+
+      this.guessedLetters.push(letter);
+
+      this.guessesLeft--;
+
+      document.querySelector("#guessLeft").innerHTML = "Guesses left: " + this.guessesLeft;
+      document.querySelector("#letters-guessed").innerHTML = "Letters guessed: " + this.guessedLetters.join(", ");
+    }
+  },
+
+  processUpdateTotalGuesses: function() {
+
+    this.totalGuesses = this.lettersOfTheWord.length + 5;
+    this.guessesLeft = this.totalGuesses;
+
+    document.querySelector("#guessLeft").innerHTML = this.guessesLeft;
+  },
+
+
+  updateMatchedLetters: function(letter) {
+    
+    for (var i = 0; i < this.lettersOfTheWord.length; i++) {
+      
+      if ((letter === this.lettersOfTheWord[i]) && (this.matchedLetters.indexOf(letter) === -1)) {
         
-                }
-   if (match == false)
-            guessesLeft--;  
+        this.matchedLetters.push(letter);
+      }
+    }
+  },
 
+  
+  rebuildWordView: function() {
+    
+    var wordView = "";
+
+    
+    for (var i = 0; i < this.lettersOfTheWord.length; i++) {
+      
+      if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) !== -1) {
+        wordView += this.lettersOfTheWord[i];
+      }
+      
+      else {
+        wordView += "&nbsp;_&nbsp;";
+      }
+    }
+
+    
+    document.querySelector("#secret-word").innerHTML = wordView;
+  },
+
+  
+  restartGame: function() {
+    document.querySelector("#letters-guessed").innerHTML = "";
+    this.wordInPlay = null;
+    this.lettersOfTheWord = [];
+    this.matchedLetters = [];
+    this.guessedLetters = [];
+    this.guessesLeft = 0;
+    this.totalGuesses = 0;
+    this.letterGuessed = null;
+    this.setupGame();
+    this.rebuildWordView();
+  },
+
+  
+  updateWins: function() {
+
+    
+
+
+    if (this.matchedLetters.length === 0) {
+      var win = false;
+    }
+
+    else {
+      var win = true;
+    }
+
+
+    for (var i = 0; i < this.lettersOfTheWord.length; i++) {
+      if (this.matchedLetters.indexOf(this.lettersOfTheWord[i]) === -1) {
+        win = false;
+      }
+    }
+
+
+    if (win === true) {
+
+      this.wins = this.wins + 1;
+
+      document.querySelector("#wins").innerHTML = "Wins: " + this.wins;
+
+      // Update the image of the band on the page.
+      // document.querySelector("#picture").innerHTML = "<img id='heroPicture' class='heroImage' src='assets/images/" + this.wordsToPick[this.wordInPlay].picture + "' alt='" + this.wordsToPick[this.wordInPlay].song + "'>";
+
+      return true;
     }
     
-        
+    else {
+      return false;
+    }
+  }
+};
 
-        if (guessesLeft == 0) {
-            decideSuperhero();
-        }
-    
-     
-            var display = document.querySelector("#main")
-            var text = document.querySelector("#secret-word");
-            text = '<p> Wins: ' + wins + '</p>';
-            text +='<p> Current Word: <br>';
-            text += spaces;
-            text += '</p>';
-            text +='<p> Number of guesses left: ' + guessesLeft + '</p>';
-            text += '<p>Your guesses so far: ' + guesses + '</p>';
-            display.innerHTML = text;
-    
 
-    // push the letter chosen (key) into the guesses array
-    // compare the letter chosen with the letters in the randomWord
-    // display the correct letter on the page in the correct position
-    // count wins
-    // call decideSuperhero(); when you win to reset randomWord
-    // when game resets, you will need to reset the variables (e.g. guesses, gussesLeft etc)
-}
+hangmanGame.setupGame();
+
+
+document.onkeyup = function(event) {
+  
+  hangmanGame.letterGuessed = String.fromCharCode(event.keyCode).toLowerCase();
+  
+  hangmanGame.updatePage(hangmanGame.letterGuessed);
+};
