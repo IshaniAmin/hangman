@@ -32,7 +32,7 @@ var hangmanGame = {
   letterGuessed: null,
   wins: 0,
 
-  setupGame: function() {
+  startGame: function() {
     
     var objKeys = Object.keys(this.wordsToPick);
     this.wordInPlay = objKeys[Math.floor(Math.random() * objKeys.length)];
@@ -133,7 +133,7 @@ var hangmanGame = {
     this.guessesLeft = 0;
     this.totalGuesses = 0;
     this.letterGuessed = null;
-    this.setupGame();
+    this.startGame();
     this.rebuildWordView();
   },
 
@@ -177,7 +177,7 @@ var hangmanGame = {
 };
 
 
-hangmanGame.setupGame();
+hangmanGame.startGame();
 
 
 document.onkeyup = function(event) {
